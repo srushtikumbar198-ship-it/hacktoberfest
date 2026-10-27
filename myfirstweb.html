@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f4f0e8">
+  <meta name="description" content="Explore cultural heritage through real images, audio stories, and QR-linked virtual exhibits.">
+  <title>INDIA'S HERITAGE MUSEUM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --paper:#f4f0e8; --ink:#20231f; --muted:#77766f; --red:#a4402e; --green:#304d42; --line:#d9d3c8; --serif:"Playfair Display",Georgia,serif; --sans:"DM Sans",sans-serif; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); }
+    button,input { font:inherit; }
+    button,a { -webkit-tap-highlight-color:transparent; }
+    a { color:inherit; text-decoration:none; }
+    button { color:inherit; }
+    .topbar { height:76px; padding:0 6.2%; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); }
+    .brand { display:flex; gap:12px; align-items:center; font-size:13px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; }
+    .brand-mark { width:30px; height:30px; display:grid; place-items:center; background:var(--red); color:var(--paper); font:20px var(--serif); }
+    .nav { display:flex; gap:30px; align-items:center; font-size:12px; color:#565750; }
+    .nav a:hover,.nav a:focus-visible { color:var(--red); }
+    .scan-link,.saved-link { display:flex; align-items:center; gap:8px; border:0; background:transparent; cursor:pointer; font-size:12px; }
+    .saved-count { min-width:20px; height:20px; border-radius:50%; display:grid; place-items:center; background:#e6ddd0; font-size:10px; }
+    .hero { min-height:min(690px,calc(100svh - 76px)); position:relative; display:flex; align-items:flex-end; overflow:hidden; color:white; background:#494239; }
+    .hero::before { content:""; position:absolute; inset:0; background:linear-gradient(90deg,rgba(20,24,21,.77),rgba(20,24,21,.34) 48%,rgba(20,24,21,.04)),linear-gradient(0deg,rgba(12,14,12,.48),transparent 42%),url("https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b8/Medieval_Sculptures_of_Bihar_-_Archaeology_Gallery_-_Indian_Museum_-_Kolkata_2012-12-21_2385.JPG/3840px-Medieval_Sculptures_of_Bihar_-_Archaeology_Gallery_-_Indian_Museum_-_Kolkata_2012-12-21_2385.JPG") center 48%/cover; animation:arrive 1.1s ease-out both; }
+    .hero-content { position:relative; z-index:1; width:min(900px,100%); padding:0 8.5% 76px; animation:rise .75s .12s both; }
+    .eyebrow { display:flex; align-items:center; gap:12px; margin:0 0 20px; font-size:10px; letter-spacing:2px; text-transform:uppercase; }
+    .eyebrow::before { content:""; width:27px; height:1px; background:currentColor; }
+    h1,h2,h3,p { margin-top:0; }
+    .hero h1 { max-width:720px; margin-bottom:20px; font:500 clamp(54px,7vw,94px)/.99 var(--serif); }
+    .hero-copy { max-width:465px; margin-bottom:29px; color:rgba(255,255,255,.82); font-size:14px; line-height:1.8; }
+    .hero-actions { display:flex; align-items:center; flex-wrap:wrap; gap:12px; }
+    .button { min-height:44px; padding:0 16px; display:inline-flex; gap:9px; align-items:center; justify-content:center; border:1px solid transparent; cursor:pointer; font-size:11px; font-weight:600; transition:background .2s,color .2s,border-color .2s; }
+    .button-light { background:var(--paper); color:var(--ink); }
+    .button-light:hover { background:white; }
+    .button-outline { border-color:rgba(255,255,255,.6); color:white; background:transparent; }
+    .button-outline:hover { background:rgba(255,255,255,.13); }
+    .hero-caption { position:absolute; right:6.2%; bottom:36px; z-index:1; font-size:10px; color:rgba(255,255,255,.8); }
+    .hero-credit { position:absolute; left:6.2%; bottom:36px; z-index:1; max-width:48%; color:rgba(255,255,255,.8); font-size:9px; }
+    .hero-credit:hover { text-decoration:underline; }
+    .section { padding:84px 8.5%; }
+    .section-head { display:flex; align-items:end; justify-content:space-between; gap:24px; margin-bottom:32px; }
+    .section-kicker { margin-bottom:11px; color:var(--red); font-size:10px; font-weight:700; letter-spacing:1.7px; text-transform:uppercase; }
+    .section h2 { margin:0; font:500 clamp(34px,4vw,50px)/1.08 var(--serif); }
+    .section-intro { max-width:330px; margin:0 0 4px; color:var(--muted); font-size:12px; line-height:1.7; }
+    .collection-tools { display:flex; justify-content:space-between; align-items:center; gap:18px; margin-bottom:25px; border-bottom:1px solid var(--line); }
+    .collection-controls { display:flex; align-items:center; gap:18px; min-width:0; }
+    .filters { display:flex; gap:23px; overflow-x:auto; }
+    .filter { position:relative; padding:0 0 13px; border:0; color:var(--muted); background:transparent; white-space:nowrap; cursor:pointer; font-size:11px; }
+    .filter[aria-pressed="true"] { color:var(--ink); }
+    .filter[aria-pressed="true"]::after { content:""; position:absolute; right:0; bottom:-1px; left:0; height:2px; background:var(--red); }
+    .search { width:190px; margin-bottom:10px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #b9b3a9; }
+    .search input { width:100%; padding:7px 0; border:0; outline:0; background:transparent; font-size:11px; }
+    .state-select { max-width:160px; margin-bottom:10px; padding:7px 20px 7px 0; border:0; border-bottom:1px solid #b9b3a9; border-radius:0; color:#565750; background:transparent; font-size:11px; }
+    .state-stepper { margin-bottom:10px; display:flex; align-items:center; gap:9px; white-space:nowrap; }
+    .state-stepper button { width:27px; height:27px; display:grid; place-items:center; border:1px solid var(--line); background:transparent; cursor:pointer; }
+    .state-stepper button:hover { color:white; background:var(--green); }
+    .state-step-label { min-width:105px; color:var(--muted); font-size:9px; }
+    .state-group { grid-column:1/-1; }
+    .state-heading { margin:7px 0 15px; padding:0 0 10px; display:flex; align-items:baseline; gap:11px; border-bottom:1px solid var(--line); }
+    .state-heading h3 { margin:0; font:500 27px/1.1 var(--serif); }
+    .state-heading span { color:var(--muted); font-size:9px; }
+    .state-group-cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:19px; }
+    .cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:19px; }
+    .exhibit-card { min-width:0; cursor:pointer; }
+    .card-image { position:relative; height:clamp(190px,24vw,310px); overflow:hidden; background:#d8d1c5; }
+    .card-image.photo-missing { background:repeating-linear-gradient(135deg,#d9d3c8 0 14px,#e8e2d7 14px 28px); }
+    .card-image img { width:100%; height:100%; display:block; object-fit:cover; transition:transform .55s; }
+    .card-image img[hidden] { display:none; }
+    .exhibit-card:hover .card-image img { transform:scale(1.045); }
+    .card-number { position:absolute; top:13px; left:13px; padding:6px 9px; color:white; background:rgba(28,31,27,.72); font-size:9px; letter-spacing:1px; }
+    .card-body { padding:15px 0 0; display:flex; justify-content:space-between; gap:12px; }
+    .card-category { margin-bottom:7px; color:var(--red); font-size:9px; letter-spacing:1.2px; text-transform:uppercase; }
+    .card-body h3 { margin-bottom:5px; font:500 22px/1.2 var(--serif); }
+    .card-place { margin:0; color:var(--muted); font-size:10px; }
+    .card-open { width:34px; height:34px; flex:0 0 auto; display:grid; place-items:center; border:1px solid var(--line); border-radius:50%; background:transparent; cursor:pointer; }
+    .empty-state { grid-column:1/-1; padding:35px 0; color:var(--muted); font-size:13px; }
+    .experience { padding:0 8.5% 88px; }
+    .experience-panel { min-height:365px; display:grid; grid-template-columns:1.02fr .98fr; background:var(--green); color:#f5f0e6; }
+    .experience-image { min-height:365px; background:linear-gradient(90deg,transparent 70%,rgba(48,77,66,.3)),url("https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1200&q=85") center/cover; }
+    .experience-copy { padding:52px clamp(28px,5vw,70px); align-self:center; }
+    .experience-copy .section-kicker { color:#e8ad7b; }
+    .experience-copy h2 { max-width:420px; margin:0 0 17px; font:500 clamp(34px,4vw,48px)/1.1 var(--serif); }
+    .experience-copy p { max-width:400px; margin-bottom:24px; color:rgba(245,240,230,.77); font-size:12px; line-height:1.8; }
+    .experience-copy .button { border-color:rgba(245,240,230,.6); color:#f5f0e6; background:transparent; }
+    .footer { padding:24px 6.2%; display:flex; align-items:center; justify-content:space-between; gap:15px; border-top:1px solid var(--line); color:var(--muted); font-size:10px; }
+    .footer strong { color:var(--ink); font-weight:600; }
+    .modal { position:fixed; inset:0; z-index:10; padding:24px; display:none; place-items:center; background:rgba(19,22,19,.78); }
+    .modal.open { display:grid; }
+    .dialog { position:relative; width:min(940px,100%); max-height:min(800px,92svh); display:grid; grid-template-columns:1fr 1fr; overflow:auto; background:var(--paper); animation:rise .25s ease-out both; }
+    .dialog-image { min-height:430px; position:relative; overflow:hidden; background:#c9c3b8; }
+    .dialog-image>img { width:100%; height:100%; position:absolute; inset:0; object-fit:cover; transition:transform .12s linear; cursor:grab; }
+    .dialog-image>img:active { cursor:grabbing; }
+    .hotspot { position:absolute; z-index:1; width:34px; height:34px; border:1px solid white; border-radius:50%; color:white; background:rgba(164,64,46,.9); cursor:pointer; box-shadow:0 0 0 5px rgba(255,255,255,.25); }
+    .hotspot-one { top:34%; left:54%; }
+    .hotspot-two { top:60%; left:30%; }
+    .hotspot-note { position:absolute; right:12px; bottom:12px; left:12px; z-index:2; padding:11px 13px; color:white; background:rgba(26,29,25,.86); font-size:11px; line-height:1.6; }
+    .dialog-content { position:relative; padding:clamp(28px,5vw,48px); }
+    .close-modal { position:absolute; top:13px; right:13px; width:36px; height:36px; border:1px solid var(--line); border-radius:50%; background:var(--paper); cursor:pointer; font-size:18px; }
+    .dialog-content h2 { margin:0 0 7px; font:500 38px/1.1 var(--serif); }
+    .dialog-place { margin-bottom:20px; color:var(--muted); font-size:11px; }
+    .dialog-description { color:#5e5e56; font-size:12px; line-height:1.85; }
+    .detail-rule { height:1px; margin:18px 0; background:var(--line); }
+    .detail-label { margin-bottom:9px; color:var(--red); font-size:9px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase; }
+    .audio-language { margin:0 0 11px; display:flex; align-items:center; gap:11px; color:var(--muted); font-size:10px; }
+    .audio-language select { min-width:138px; padding:7px 22px 7px 9px; border:1px solid var(--line); border-radius:0; color:var(--ink); background:transparent; font-size:11px; }
+    .translation-output { margin:12px 0 0; padding:10px 12px; border-left:2px solid var(--red); color:#5e5e56; font-size:11px; line-height:1.65; }
+    .dialog-actions { display:flex; flex-wrap:wrap; gap:8px; }
+    .dialog-actions .button { min-height:39px; padding:0 12px; border-color:var(--line); background:transparent; font-size:10px; }
+    .dialog-actions .button:hover,.dialog-actions .button.active { border-color:var(--green); color:white; background:var(--green); }
+    .qr-area { margin-top:17px; padding:13px; display:none; grid-template-columns:82px 1fr; align-items:center; gap:13px; border:1px solid var(--line); }
+    .qr-area.visible { display:grid; }
+    .qr-area.needs-host { grid-template-columns:1fr; }
+    .qr-area img { width:82px; height:82px; image-rendering:pixelated; background:white; }
+    .qr-area p { margin:0 0 7px; color:#5e5e56; font-size:10px; line-height:1.5; }
+    .qr-area a { color:var(--red); font-size:10px; text-decoration:underline; }
+    .pan-hint { position:absolute; right:10px; bottom:10px; z-index:1; padding:6px 8px; color:white; background:rgba(26,29,25,.66); font-size:9px; }
+    .photo-credit { position:absolute; bottom:10px; left:10px; z-index:1; max-width:60%; padding:6px 8px; color:white; background:rgba(26,29,25,.72); font-size:9px; }
+    .photo-credit:hover { text-decoration:underline; }
+    .scan-modal { position:fixed; inset:0; z-index:15; padding:20px; display:none; place-items:center; background:rgba(19,22,19,.82); }
+    .scan-modal.open { display:grid; }
+    .scan-panel { position:relative; width:min(480px,100%); padding:25px; background:var(--paper); }
+    .scan-panel h2 { margin:0 0 8px; font:500 32px var(--serif); }
+    .scan-panel>p { color:var(--muted); font-size:11px; line-height:1.6; }
+    .scan-video-wrap { position:relative; min-height:230px; margin:16px 0; display:grid; place-items:center; overflow:hidden; background:#1b201d; }
+    .scan-video-wrap video { width:100%; max-height:330px; object-fit:cover; }
+    .scan-frame { position:absolute; width:150px; height:150px; border:2px solid rgba(255,255,255,.85); pointer-events:none; }
+    .scan-status { min-height:18px; margin:8px 0; color:var(--red); font-size:11px; }
+    .scan-actions { display:flex; flex-wrap:wrap; gap:8px; }
+    .scan-actions .button { border-color:var(--line); background:transparent; }
+    .scan-actions .button:hover { color:white; background:var(--green); }
+    .toast { position:fixed; right:22px; bottom:22px; z-index:20; padding:13px 17px; color:white; background:var(--green); font-size:11px; opacity:0; transform:translateY(8px); pointer-events:none; transition:.2s; }
+    .toast.show { opacity:1; transform:translateY(0); }
+    @keyframes rise { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes arrive { from { transform:scale(1.06); } to { transform:scale(1); } }
+    @media(max-width:760px) {
+      .topbar { height:64px; padding:0 5%; }
+      .nav { gap:15px; }
+      .nav a:nth-child(2) { display:none; }
+      .brand { font-size:11px; }
+      .scan-link,.saved-link { gap:5px; font-size:10px; }
+      .hero { min-height:min(720px,calc(100svh - 64px)); }
+      .hero::before { background-position:58% center; }
+      .hero-content { padding:0 7% 72px; }
+      .hero-caption { right:7%; bottom:23px; }
+      .section { padding:65px 7%; }
+      .section-head { align-items:start; flex-direction:column; gap:12px; }
+      .cards { grid-template-columns:repeat(2,minmax(0,1fr)); gap:27px 14px; }
+      .card-image { height:clamp(160px,38vw,260px); }
+      .collection-tools { align-items:end; }
+      .collection-controls { flex:1; gap:14px; overflow-x:auto; }
+      .filters { gap:17px; }
+      .search { width:125px; flex:0 0 auto; }
+      .state-select { max-width:125px; flex:0 0 auto; }
+      .experience { padding:0 7% 65px; }
+      .experience-panel { grid-template-columns:1fr; }
+      .experience-image { min-height:260px; }
+      .experience-copy { padding:36px 28px 40px; }
+      .dialog { grid-template-columns:1fr; max-height:92svh; }
+      .dialog-image { min-height:280px; }
+      .dialog-content { padding:30px; }
+      .footer { padding:22px 7%; }
+    }
+    @media(max-width:430px) {
+      .nav { gap:9px; font-size:10px; }
+      .nav a:nth-child(3) { display:none; }
+      .hero h1 { font-size:56px; }
+      .collection-tools { display:block; }
+      .search { width:100%; margin-top:14px; }
+      .cards { grid-template-columns:1fr; }
+      .card-image { height:260px; }
+      .footer { align-items:start; flex-direction:column; }
+    }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; transition-duration:.01ms!important; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="Common Ground home"><span class="brand-mark">C</span><span>Common Ground</span></a>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="#collection">Explore</a><a href="#experience">Experiences</a>
+      <button class="scan-link" id="scanOpen" type="button" aria-label="Scan a museum or heritage QR code">▦ Scan QR</button>
+      <button class="saved-link" id="savedLink" type="button">Saved <span class="saved-count" id="savedCount">0</span></button>
+    </nav>
+  </header>
+  <main>
+    <section class="hero" id="home" aria-label="Featured image: Indian Museum sculpture gallery">
+      <div class="hero-content">
+        <p class="eyebrow">19 museums · Dance traditions from every listed state</p>
+        <h1>India's stories,<br>open to all.</h1>
+        <p class="hero-copy">Explore museums, monuments, and the dances that carry India's stories, with histories to see and hear.</p>
+        <div class="hero-actions"><button class="button button-light" id="heroExplore" type="button">Explore the collection <span aria-hidden="true">↗</span></button><button class="button button-outline" id="heroListen" type="button">▷ <span>Listen to the story</span></button></div>
+      </div>
+      <a class="hero-credit" href="https://commons.wikimedia.org/wiki/File:Medieval_Sculptures_of_Bihar_-_Archaeology_Gallery_-_Indian_Museum_-_Kolkata_2012-12-21_2385.JPG" target="_blank" rel="noopener noreferrer">Gallery photograph: Biswarup Ganguly · Wikimedia Commons · CC BY 3.0</a><div class="hero-caption">Indian Museum · Kolkata, India</div>
+    </section>
+    <section class="section" id="collection">
+      <div class="section-head"><div><p class="section-kicker" id="collectionCount">A growing guide · India</p><h2>India, one collection.</h2></div><p class="section-intro">Explore 19 museums, a dance tradition from each of the 14 states in this guide, and landmark heritage stories from across India.</p></div>
+      <div class="collection-tools"><div class="collection-controls"><div class="filters" role="group" aria-label="Filter collection">
+        <button class="filter" type="button" aria-pressed="true" data-filter="all">All 38</button><button class="filter" type="button" aria-pressed="false" data-filter="museum">Museums</button><button class="filter" type="button" aria-pressed="false" data-filter="architecture">Architecture</button><button class="filter" type="button" aria-pressed="false" data-filter="art">Art &amp; craft</button><button class="filter" type="button" aria-pressed="false" data-filter="dance">Dance</button>
+      </div><select class="state-select" id="stateSelect" aria-label="Filter by state"><option value="all">All states</option></select><div class="state-stepper"><button id="previousState" type="button" aria-label="Previous state" title="Previous state">←</button><span class="state-step-label" id="stateStepLabel">All India · 14 states</span><button id="nextState" type="button" aria-label="Next state" title="Next state">→</button></div></div><label class="search"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Find a story" aria-label="Search museums and exhibits"></label></div>
+      <div class="cards" id="cards"></div>
+    </section>
+    <section class="experience" id="experience"><div class="experience-panel"><div class="experience-image" role="img" aria-label="Colorful traditional paintings in a gallery"></div><div class="experience-copy"><p class="section-kicker">A closer look · Interactive visit</p><h2>Look slowly.<br>Notice more.</h2><p>Every object holds details that are easy to miss at a distance. Open a story, move across the image, and tap the markers to reveal small things with big histories.</p><button class="button" id="experienceExplore" type="button">Visit the collection <span aria-hidden="true">↗</span></button></div></div></section>
+  </main>
+  <footer class="footer"><strong>Common Ground</strong><span>A virtual museum for the stories we inherit and share.</span><span>Made for curious minds, everywhere.</span></footer>
+
+  <div class="modal" id="exhibitModal" role="dialog" aria-modal="true" aria-labelledby="dialogTitle"><div class="dialog">
+    <div class="dialog-image" id="dialogImage"><img id="dialogPhoto" alt=""><button class="hotspot hotspot-one" type="button" aria-label="Explore detail one" data-note="Look for the hand-carved detail: each surface was shaped by artisans working stone by stone.">+</button><button class="hotspot hotspot-two" type="button" aria-label="Explore detail two" data-note="Notice how light changes the color and texture across the material throughout the day.">+</button><span class="pan-hint">Drag to look around · Tap a marker</span><a class="photo-credit" id="photoCredit" hidden target="_blank" rel="noopener noreferrer"></a><div class="hotspot-note" id="hotspotNote" hidden></div></div>
+    <div class="dialog-content"><button class="close-modal" id="closeModal" type="button" aria-label="Close exhibit">×</button><p class="section-kicker" id="dialogCategory"></p><h2 id="dialogTitle"></h2><p class="dialog-place" id="dialogPlace"></p><p class="dialog-description" id="dialogDescription"></p><div class="detail-rule"></div><p class="detail-label">Choose how to visit</p><label class="audio-language" for="audioLanguage"><span>Audio language</span><select id="audioLanguage"><option value="en">English</option><option value="hi">Hindi</option><option value="kn">Kannada</option></select></label><div class="dialog-actions"><button class="button" id="audioButton" type="button">▷ <span>Play audio story</span></button><a class="button" id="videoButton" href="#" target="_blank" rel="noopener noreferrer">▻ <span>Watch a film</span></a><button class="button" id="saveButton" type="button">☆ <span>Save this story</span></button><button class="button" id="qrButton" type="button">▦ <span>Exhibit QR</span></button></div><p class="translation-output" id="translationOutput" hidden></p>
+      <div class="qr-area" id="qrArea"><img id="qrImage" alt="QR code for this exhibit"><div><p id="qrMessage"></p><a id="qrDownload" href="#" download="exhibit-qr.png">Download QR image</a></div></div>
+    </div>
+  </div></div>
+  <div class="scan-modal" id="scanModal" role="dialog" aria-modal="true" aria-labelledby="scanTitle"><div class="scan-panel"><button class="close-modal" id="scanClose" type="button" aria-label="Close QR scanner">×</button><p class="section-kicker">On-site visit</p><h2 id="scanTitle">Scan an exhibit.</h2><p>Point your camera at a Common Ground museum or heritage QR code to open its images and audio guide. Camera scanning requires permission and a secure connection (HTTPS or localhost).</p><div class="scan-video-wrap"><video id="scanVideo" playsinline muted></video><span class="scan-frame" aria-hidden="true"></span></div><p class="scan-status" id="scanStatus" role="status" aria-live="polite">Start your camera, or open a story below.</p><div class="scan-actions"><button class="button" id="cameraStart" type="button">Start camera</button><button class="button" id="cameraStop" type="button">Stop camera</button></div><div class="filters" style="margin-top:20px" id="scanFallback"></div></div></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const exhibits = [
+      { id:"indian-museum",category:"museum",label:"Museum",title:"Indian Museum",place:"Kolkata · West Bengal",state:"West Bengal",era:"MUSEUM · 01",image:"https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1100&q=85",imageQuery:"Indian Museum Kolkata",alt:"Historic art and sculpture in a museum collection",video:"Indian Museum Kolkata galleries collection",description:"Founded in 1814, the Indian Museum brings natural history, archaeology, art, and cultural objects together under one roof. Its collections offer a way to trace connections across regions and centuries.",narration:"Welcome to the Indian Museum in Kolkata, founded in 1814. Its collections range across art, archaeology, and natural history. Choose one object and let it lead you outward: a museum can make a very large history feel close."},
+      { id:"national-museum",category:"museum",label:"Museum",title:"National Museum",place:"New Delhi · Delhi",state:"Delhi",era:"MUSEUM · 02",image:"https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1100&q=85",imageQuery:"National Museum New Delhi galleries",alt:"Objects and artworks displayed in a museum gallery",video:"National Museum New Delhi collection galleries",description:"The National Museum in New Delhi presents collections spanning archaeology, sculpture, painting, manuscripts, and decorative arts. Its galleries bring together objects from many parts of the subcontinent.",narration:"At the National Museum in New Delhi, objects from across the subcontinent share a home. Look for how materials and forms travel between regions. Each gallery offers another way to read India's long and varied history."},
+      { id:"ngma-delhi",category:"museum",label:"Museum",title:"National Gallery of Modern Art",place:"New Delhi · Delhi",state:"Delhi",era:"MUSEUM · 03",image:"https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1100&q=85",imageQuery:"National Gallery of Modern Art New Delhi",alt:"Modern paintings arranged in a bright gallery",video:"National Gallery of Modern Art New Delhi artworks",description:"Housed in Jaipur House, the National Gallery of Modern Art follows the changing language of Indian art through paintings, sculpture, and other forms. The collection makes room for artists working across different periods and ideas.",narration:"The National Gallery of Modern Art in Delhi follows artists as they experiment with new subjects, materials, and ways of seeing. Notice how one generation responds to the world left by another."},
+      { id:"csmvs",category:"museum",label:"Museum",title:"Chhatrapati Shivaji Maharaj Vastu Sangrahalaya",place:"Mumbai · Maharashtra",state:"Maharashtra",era:"MUSEUM · 04",image:"https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1100&q=85",imageQuery:"Chhatrapati Shivaji Maharaj Vastu Sangrahalaya Mumbai",alt:"Historic museum architecture and collections in Mumbai",video:"CSMVS Mumbai museum collection building",description:"CSMVS pairs an Indo-Saracenic building with galleries of art, archaeology, and natural history. Its collections connect Mumbai to artistic and cultural histories from across India and beyond.",narration:"In Mumbai, CSMVS brings together a landmark building and collections spanning art, archaeology, and natural history. Move from the architecture outside to the objects within, and notice how each tells a different part of the city's story."},
+      { id:"bhau-daji-lad",category:"museum",label:"Museum",title:"Dr. Bhau Daji Lad Museum",place:"Mumbai · Maharashtra",state:"Maharashtra",era:"MUSEUM · 05",image:"https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1100&q=85",imageQuery:"Dr Bhau Daji Lad Museum Mumbai interiors",alt:"Decorative arts displayed in a historic city museum",video:"Dr Bhau Daji Lad Museum Mumbai collection",description:"Mumbai's oldest museum explores the city's decorative arts, maps, photographs, and social history. Restored interiors and detailed objects offer a close-up view of Mumbai's changing life.",narration:"The Dr. Bhau Daji Lad Museum looks closely at Mumbai: its crafts, maps, photographs, and everyday histories. Take time with the small objects. They show how a city changes through the lives of its people."},
+      { id:"salar-jung",category:"museum",label:"Museum",title:"Salar Jung Museum",place:"Hyderabad · Telangana",state:"Telangana",era:"MUSEUM · 06",image:"https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1100&q=85",imageQuery:"Salar Jung Museum Hyderabad galleries",alt:"Art and historical objects in a museum gallery",video:"Salar Jung Museum Hyderabad collection",description:"Built around the collection assembled by the Salar Jung family, this Hyderabad museum holds works of art, manuscripts, furniture, and objects from India and many other regions.",narration:"The Salar Jung Museum grew from a family's collecting across generations. Its objects arrived from many places and traditions. Pick a detail that catches your eye, then imagine the routes and hands that brought it here."},
+      { id:"government-museum-chennai",category:"museum",label:"Museum",title:"Government Museum, Chennai",place:"Chennai · Tamil Nadu",state:"Tamil Nadu",era:"MUSEUM · 07",image:"https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1100&q=85",imageQuery:"Government Museum Chennai Egmore bronze gallery",alt:"South Indian sculpture and historical objects in a museum",video:"Government Museum Chennai bronze gallery",description:"Established in 1851, the Government Museum in Chennai is known for collections spanning archaeology, anthropology, and art, including its celebrated South Indian bronzes.",narration:"The Government Museum in Chennai dates to 1851. Its galleries include remarkable South Indian bronzes. Notice the balance and movement of each figure, and the skilled casting that makes metal seem alive."},
+      { id:"albert-hall",category:"museum",label:"Museum",title:"Albert Hall Museum",place:"Jaipur · Rajasthan",state:"Rajasthan",era:"MUSEUM · 08",image:"https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/Albert_Hall%2C_Ram_Niwas_Bagh%2C_Jaipur%2C_Rajasthan.jpg/1920px-Albert_Hall%2C_Ram_Niwas_Bagh%2C_Jaipur%2C_Rajasthan.jpg",photoPage:"https://commons.wikimedia.org/wiki/File:Albert_Hall,_Ram_Niwas_Bagh,_Jaipur,_Rajasthan.jpg",photoTitle:"Albert Hall, Ram Niwas Bagh, Jaipur, Rajasthan.jpg",alt:"Albert Hall Museum exterior in Jaipur, Rajasthan",video:"Albert Hall Museum Jaipur collection",description:"Set in Ram Niwas Garden, Albert Hall Museum is known for its richly detailed Indo-Saracenic architecture and collections of art, craft, and historical objects from Rajasthan and beyond.",narration:"Albert Hall stands in Jaipur's Ram Niwas Garden, where its architecture is part of the visit. Look at the arches and ornament, then step into the galleries to explore the objects and crafts they shelter."},
+      { id:"calico-museum",category:"museum",label:"Museum",title:"Calico Museum of Textiles",place:"Ahmedabad · Gujarat",state:"Gujarat",era:"MUSEUM · 09",image:"https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1100&q=85",imageQuery:"Calico Museum of Textiles Ahmedabad textile",alt:"Colorful woven textiles and patterned cloth",video:"Calico Museum of Textiles Ahmedabad collection",description:"The Calico Museum preserves and presents Indian textiles, from intricate embroideries to courtly fabrics and regional weaving traditions. Cloth becomes a record of technique, trade, and daily life.",narration:"At the Calico Museum, textiles tell stories through thread. Look closely at a woven pattern or embroidered edge: every choice of color and technique carries knowledge passed from one maker to another."},
+      { id:"bihar-museum",category:"museum",label:"Museum",title:"Bihar Museum",place:"Patna · Bihar",state:"Bihar",era:"MUSEUM · 10",image:"https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1100&q=85",imageQuery:"Bihar Museum Patna galleries",alt:"Sculpture and archaeology displayed in a modern museum",video:"Bihar Museum Patna collection galleries",description:"Bihar Museum presents the region's history through archaeology, sculpture, and cultural collections, connecting local stories with the larger histories of the subcontinent.",narration:"Bihar Museum in Patna places the region's stories in a wider frame. Follow the objects from archaeological finds to works of art, and notice how the past continues to shape the present."},
+      { id:"odisha-state-museum",category:"museum",label:"Museum",title:"Odisha State Museum",place:"Bhubaneswar · Odisha",state:"Odisha",era:"MUSEUM · 11",image:"https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1100&q=85",imageQuery:"Odisha State Museum Bhubaneswar collections",alt:"Regional art and cultural objects in a museum",video:"Odisha State Museum Bhubaneswar collections",description:"The Odisha State Museum explores the state's history and living culture through archaeology, manuscripts, art, and objects connected to regional traditions.",narration:"At the Odisha State Museum, manuscripts, archaeological objects, and art open windows onto the state's many histories. Notice the different ways people have recorded knowledge and kept traditions alive."},
+      { id:"napier-museum",category:"museum",label:"Museum",title:"Napier Museum",place:"Thiruvananthapuram · Kerala",state:"Kerala",era:"MUSEUM · 12",image:"https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1100&q=85",imageQuery:"Napier Museum Thiruvananthapuram building collection",alt:"Museum architecture and traditional art from Kerala",video:"Napier Museum Kerala collection architecture",description:"Napier Museum is known for its distinctive Indo-Saracenic architecture and collections of art and historical objects connected to Kerala and the region.",narration:"Napier Museum brings architecture and collection together in Thiruvananthapuram. Look at the building's varied forms, then explore the works inside that connect Kerala's artistic traditions with its wider history."},
+      { id:"kelkar-museum",category:"museum",label:"Museum",title:"Raja Dinkar Kelkar Museum",place:"Pune · Maharashtra",state:"Maharashtra",era:"MUSEUM · 13",image:"https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1100&q=85",imageQuery:"Raja Dinkar Kelkar Museum Pune collection",alt:"Decorative objects and craft in a museum collection",video:"Raja Dinkar Kelkar Museum Pune collection",description:"This Pune museum grew from Dr. Dinkar G. Kelkar's collection of objects from everyday and artistic life. Its holdings include musical instruments, lamps, doors, and decorative arts.",narration:"The Raja Dinkar Kelkar Museum began with one person's curiosity about objects and craft. Musical instruments, lamps, and carved details invite you to look at everyday design as a form of cultural memory."},
+      { id:"taj",category:"architecture",label:"Architecture",title:"The Taj Mahal",place:"Agra · Uttar Pradesh",state:"Uttar Pradesh",era:"HERITAGE · 01",imageQuery:"Taj Mahal Agra India",image:"https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1100&q=85",alt:"The Taj Mahal reflected in the long pool of its garden",video:"Taj Mahal architecture history documentary",description:"Built along the Yamuna River, the Taj Mahal brings together Persian, Islamic, and Indian design traditions. White marble shifts from rose at sunrise to gold at dusk; its symmetry is precise, but hand-cut flowers and calligraphy make every surface personal.",narration:"Welcome to the Taj Mahal, in Agra, India. Commissioned by Shah Jahan in memory of Mumtaz Mahal, this marble mausoleum took more than twenty years to build. Notice the balance of the garden and the fine stone inlay: geometry and craft meet in every detail."},
+      { id:"madhubani",category:"art",label:"Art & craft",title:"Madhubani painting",place:"Mithila · Bihar",state:"Bihar",era:"HERITAGE · 02",imageQuery:"Madhubani painting Mithila Bihar",image:"https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1100&q=85",alt:"A richly colored painting displayed in an art gallery",video:"Madhubani painting artists process documentary",description:"In the Mithila region of Bihar, artists have painted walls and handmade paper with dense patterns, vivid color, and scenes drawn from nature and epic stories. The practice continues across generations, with each artist bringing a distinct rhythm to its familiar forms.",narration:"This is Madhubani, a painting tradition from the Mithila region of Bihar. Artists often fill the whole surface with repeated lines and patterns, leaving little empty space. Look closely at the borders and repeated motifs: the smallest marks are part of the story."},
+      { id:"kathakali",category:"dance",label:"Dance",title:"Kathakali",place:"Kerala",state:"Kerala",era:"DANCE · 06",imageQuery:"Kathakali performance Kerala dance",image:"https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1100&q=85",alt:"A Kathakali performer in traditional makeup and costume",video:"Kerala Kathakali performance traditional dance",description:"Kathakali is Kerala's dance-drama tradition, shaped by classical texts, temple arts, music, and highly codified gesture. Performers train for years to tell stories through expressive eyes, hand signs, rhythm, costume, and elaborate makeup.",narration:"Kathakali is Kerala's dance-drama tradition. Stories unfold through music, expressive eyes, and carefully shaped hand gestures. The elaborate makeup can take hours to apply, turning the performer's face into part of the visual language."},
+      { id:"hampi",category:"architecture",label:"Architecture",title:"The stone chariot",place:"Hampi · Karnataka",state:"Karnataka",era:"HERITAGE · 04",imageQuery:"Hampi stone chariot Vijaya Vittala Temple",image:"https://images.unsplash.com/photo-1600100397608-f010a3c286a5?auto=format&fit=crop&w=1100&q=85",alt:"The stone chariot at the Vijaya Vittala Temple in Hampi",video:"Hampi stone chariot Vijaya Vittala temple history",description:"At the Vijaya Vittala Temple in Hampi, a sculpted stone chariot stands among temples and granite hills. Its carved wheels and figures speak to the skill and imagination of artisans in the Vijayanagara Empire.",narration:"At Hampi's Vijaya Vittala Temple, this stone chariot is both sculpture and architecture. Its carved wheels appear ready to move, while small details across the structure reward a closer look. The surrounding ruins were once part of a thriving imperial capital."},
+      { id:"weaving",category:"art",label:"Art & craft",title:"The living loom",place:"Varanasi · Uttar Pradesh",state:"Uttar Pradesh",era:"HERITAGE · 05",imageQuery:"Varanasi handloom sari",image:"https://images.unsplash.com/photo-1604881988758-f76ad2f7adec?auto=format&fit=crop&w=1100&q=85",alt:"Silk looms and woven Banarasi textiles in Varanasi",video:"Banarasi silk weaving artisan handloom documentary",description:"Banarasi silk weaving is a patient collaboration between hand, thread, and loom. Metallic brocade patterns are built into the fabric one pass at a time, carrying techniques taught and adapted across generations.",narration:"A Banarasi silk textile takes shape one careful pass of the loom at a time. Metallic threads create patterns that seem to move when the cloth catches the light. The design holds the memory of both the artisan's skill and the people who will wear it."},
+      { id:"stepwell",category:"architecture",label:"Architecture",title:"Rani ki Vav",place:"Patan · Gujarat",state:"Gujarat",era:"HERITAGE · 06",imageQuery:"Rani ki Vav Patan Gujarat stepwell",image:"https://images.unsplash.com/photo-1606293926075-69a00dbfde81?auto=format&fit=crop&w=1100&q=85",alt:"Carved stone architecture with repeating geometric details",video:"Rani ki Vav Patan stepwell UNESCO heritage",description:"Rani ki Vav descends seven levels beneath the ground in a remarkable meeting of water engineering and sculpture. Hundreds of carved figures line the sandstone walls, turning an essential source of water into a place of beauty and reflection.",narration:"Rani ki Vav is a stepwell in Patan, Gujarat, built to reach water below the ground. Its seven levels are covered with carved figures and repeating details. Imagine descending: the architecture changes with the light and brings you closer to the water."}
+    ];
+    exhibits.push(
+      { id:"victoria-memorial",category:"museum",label:"Museum",title:"Victoria Memorial Hall",place:"Kolkata · West Bengal",state:"West Bengal",era:"MUSEUM · 14",image:"https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1100&q=85",imageQuery:"Victoria Memorial Hall Kolkata museum",alt:"Historic galleries and objects at Victoria Memorial Hall",video:"Victoria Memorial Hall Kolkata galleries history",description:"Victoria Memorial Hall is a Kolkata landmark with galleries exploring the city's history and the colonial period. Its collections include paintings, archival material, and objects that invite careful reflection on how history is told.",narration:"Victoria Memorial Hall is both a Kolkata landmark and a museum. Its galleries hold paintings and historical material from a complex period. As you look, consider whose stories are preserved and how museums can help us ask better questions."},
+      { id:"partition-museum",category:"museum",label:"Museum",title:"Partition Museum",place:"Amritsar · Punjab",state:"Punjab",era:"MUSEUM · 15",image:"https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1100&q=85",imageQuery:"Partition Museum Amritsar galleries",alt:"Personal objects and photographs displayed in a history museum",video:"Partition Museum Amritsar oral histories",description:"The Partition Museum in Amritsar centers personal testimonies and objects connected to the 1947 Partition. Its galleries preserve memories of displacement, loss, resilience, and lives reshaped by the division.",narration:"The Partition Museum in Amritsar shares the history of 1947 through personal memories and objects. These stories hold both upheaval and resilience. Take a moment with each testimony: history is also what families carry with them."},
+      { id:"rail-museum",category:"museum",label:"Museum",title:"National Rail Museum",place:"New Delhi · Delhi",state:"Delhi",era:"MUSEUM · 16",image:"https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1100&q=85",imageQuery:"National Rail Museum New Delhi locomotive",alt:"Historic railway exhibits and locomotives in a museum",video:"National Rail Museum Delhi locomotives collection",description:"The National Rail Museum traces the development of railways in India through locomotives, carriages, models, and archival displays. Its collection connects engineering history with the journeys that changed everyday life.",narration:"At the National Rail Museum in Delhi, locomotives and carriages make engineering history tangible. Follow the tracks from early machines to the railways that connected towns, markets, and families across the country."},
+      { id:"science-centre",category:"museum",label:"Museum",title:"National Science Centre",place:"New Delhi · Delhi",state:"Delhi",era:"MUSEUM · 17",image:"https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1100&q=85",imageQuery:"National Science Centre Delhi museum exhibits",alt:"Interactive science exhibits in a public museum",video:"National Science Centre Delhi galleries exhibits",description:"The National Science Centre makes scientific ideas approachable through hands-on galleries and demonstrations. It is a place to test a question, observe what happens, and connect discovery to everyday life.",narration:"At the National Science Centre in Delhi, science is something to try, not only read about. Choose an exhibit, make a prediction, and watch what happens. Curiosity is the first tool in every gallery."},
+      { id:"music-experience",category:"museum",label:"Museum",title:"Indian Music Experience Museum",place:"Bengaluru · Karnataka",state:"Karnataka",era:"MUSEUM · 18",image:"https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d9/Sitar_%28India%29.jpg/1280px-Sitar_%28India%29.jpg",photoPage:"https://commons.wikimedia.org/wiki/File:Sitar_(India).jpg",photoTitle:"Sitar (India).jpg",alt:"A sitar, representing the Indian instruments explored at the Indian Music Experience Museum",video:"Indian Music Experience Museum Bengaluru exhibits",description:"The Indian Music Experience Museum explores India's musical traditions through instruments, listening stations, stories, and interactive displays. It connects regional sounds with the people and communities who keep them alive.",narration:"At Bengaluru's Indian Music Experience Museum, music is something to hear and explore. Listen for the different instruments and regional styles, then notice how a sound can carry memory, place, and community."},
+      { id:"assam-state-museum",category:"museum",label:"Museum",title:"Assam State Museum",place:"Guwahati · Assam",state:"Assam",era:"MUSEUM · 19",image:"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/Wooden_sculpture_at_Assam_state_museum%2C_Guwahati.jpg/1280px-Wooden_sculpture_at_Assam_state_museum%2C_Guwahati.jpg",photoPage:"https://commons.wikimedia.org/wiki/File:Wooden_sculpture_at_Assam_state_museum,_Guwahati.jpg",photoTitle:"Wooden sculpture at Assam State Museum, Guwahati.jpg",alt:"A carved wooden sculpture exhibited at Assam State Museum in Guwahati",video:"Assam State Museum Guwahati galleries",description:"The Assam State Museum in Guwahati presents archaeological finds, regional art, and cultural objects that illuminate the histories and communities of Assam and Northeast India.",narration:"The Assam State Museum opens a window onto Assam and Northeast India through art, archaeology, and cultural objects. Look for the details that show how landscape, craft, and community shape regional history."}
+    );
+    exhibits.push(
+      { id:"bihu-dance",category:"dance",label:"Dance",title:"Bihu",place:"Assam",state:"Assam",era:"DANCE · 01",image:"https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1100&q=85",imageQuery:"Bihu dance Assam",alt:"Bihu dancers performing in traditional Assamese dress",video:"Bihu dance Assam festival performance",description:"Bihu is a group of Assamese festivals and a lively dance tradition especially associated with Bohag Bihu, the spring new year. Dhol drums, pepa horns, hand movements, and energetic steps welcome the agricultural season.",narration:"Bihu dance is closely associated with Bohag Bihu, the Assamese spring new year. Listen for the dhol and pepa, then notice the quick steps and expressive hand movements. The celebration welcomes a new agricultural cycle and brings communities together."},
+      { id:"jat-jatin",category:"dance",label:"Dance",title:"Jat-Jatin",place:"Bihar",state:"Bihar",era:"DANCE · 02",image:"https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1100&q=85",imageQuery:"Jat Jatin Bihar folk dance",alt:"Jat-Jatin folk dancers from Bihar",video:"Jat Jatin folk dance Bihar",description:"Jat-Jatin is a folk dance of the Mithila region, often performed by women in paired roles. Its songs and gestures tell of separation, migration, monsoon hardship, and reunion in everyday village life.",narration:"Jat-Jatin comes from Mithila in Bihar. Performers use song, gesture, and paired roles to tell a story of a couple separated by migration and reunited again. The dance carries the concerns and hopes of ordinary rural life."},
+      { id:"kathak-delhi",category:"dance",label:"Dance",title:"Kathak",place:"Delhi",state:"Delhi",era:"DANCE · 03",image:"https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1100&q=85",imageQuery:"Kathak dance India",alt:"A Kathak dancer performing expressive footwork and gesture",video:"Kathak dance Delhi gharana performance",description:"Kathak is a North Indian classical dance shaped by storytelling, rhythmic footwork, spins, and expressive gesture. Delhi became an important court and performance center for the tradition, including the Delhi gharana.",narration:"Kathak joins storytelling with rhythm. Watch how the dancer's footwork answers the percussion, then follow the turns and gestures that carry a story. Delhi's court and performance traditions helped shape one of Kathak's major gharanas."},
+      { id:"garba",category:"dance",label:"Dance",title:"Garba",place:"Gujarat",state:"Gujarat",era:"DANCE · 04",image:"https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1100&q=85",imageQuery:"Garba Gujarat folk dance",alt:"Garba dancers moving in a circle during Navratri",video:"Gujarat Garba dance Navratri",description:"Garba is a circular devotional dance from Gujarat, especially performed during Navratri. Dancers move around a central lamp or image, using claps and steps that build into a shared rhythm.",narration:"Garba is danced in circles, often around a lamp during Navratri. Each dancer's step and clap contributes to the same rhythm. The circle makes the celebration communal, welcoming people into a shared movement."},
+      { id:"dollu-kunitha",category:"dance",label:"Dance",title:"Dollu Kunitha",place:"Karnataka",state:"Karnataka",era:"DANCE · 05",image:"https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1100&q=85",imageQuery:"Dollu Kunitha Karnataka dance",alt:"Dollu Kunitha performers playing large drums",video:"Dollu Kunitha Karnataka folk dance",description:"Dollu Kunitha is a vigorous drum dance from Karnataka, traditionally associated with the Kuruba community and the worship of Beereshwara. Performers carry large drums and form changing patterns to a powerful beat.",narration:"In Dollu Kunitha, the drum is both instrument and dance partner. Performers carry large drums and move in coordinated patterns, letting rhythm set the pace. The tradition is associated with Karnataka's Kuruba community and Beereshwara worship."},
+      { id:"lavani",category:"dance",label:"Dance",title:"Lavani",place:"Maharashtra",state:"Maharashtra",era:"DANCE · 07",image:"https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1100&q=85",imageQuery:"Lavani dance Maharashtra",alt:"Lavani dancers performing to dholki rhythm",video:"Maharashtra Lavani dance performance",description:"Lavani is a song-and-dance tradition from Maharashtra, accompanied by the dholki. Its sharp rhythm, expressive performance, and poetic lyrics have carried romance, social observation, and public commentary across generations.",narration:"Lavani brings poetry, song, and dance together over the dholki's quick rhythm. Notice how gesture and expression give the lyrics their force. The form has entertained audiences while also carrying social observation and commentary."},
+      { id:"odissi",category:"dance",label:"Dance",title:"Odissi",place:"Odisha",state:"Odisha",era:"DANCE · 08",image:"https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1100&q=85",imageQuery:"Odissi dance Odisha",alt:"An Odissi dancer performing a sculptural pose",video:"Odissi classical dance Odisha performance",description:"Odissi is a classical dance from Odisha, shaped by temple sculpture, devotional poetry, and music. Its distinctive tribhangi stance bends the body at three points, balancing grounded movement with lyrical expression.",narration:"Odissi is a classical dance from Odisha. Look for tribhangi, the three-bend posture that gives the body its distinctive shape. Gesture, rhythm, and devotional poetry work together to create a conversation between movement and stillness."},
+      { id:"bhangra",category:"dance",label:"Dance",title:"Bhangra",place:"Punjab",state:"Punjab",era:"DANCE · 09",image:"https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1100&q=85",imageQuery:"Bhangra Punjab dance",alt:"Bhangra dancers performing energetic Punjabi folk steps",video:"Punjab Bhangra folk dance performance",description:"Bhangra grew from Punjab's harvest celebrations. Dhol rhythms, lifted shoulders, leaps, and call-and-response energy turn the dance into a joyous expression of community; modern stages continue to remix its folk roots.",narration:"Bhangra grew from Punjab's harvest celebrations. Listen for the dhol and watch how its beat lifts the dancers into jumps and sweeping arm movements. The dance keeps its celebratory roots while continuing to change on today's stages."},
+      { id:"ghoomar",category:"dance",label:"Dance",title:"Ghoomar",place:"Rajasthan",state:"Rajasthan",era:"DANCE · 10",image:"https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1100&q=85",imageQuery:"Ghoomar Rajasthan dance",alt:"Rajasthani women performing the circular Ghoomar dance",video:"Rajasthan Ghoomar folk dance",description:"Ghoomar is a traditional Rajasthani dance performed in a circle, with graceful turns that send the dancers' wide skirts into motion. It is shared at weddings and festivals, with regional variations in song and costume.",narration:"Ghoomar is built around the turning circle. As the dancers move, their skirts create expanding patterns of color and rhythm. The dance is shared at celebrations across Rajasthan, with each community adding its own songs and style."},
+      { id:"bharatanatyam",category:"dance",label:"Dance",title:"Bharatanatyam",place:"Tamil Nadu",state:"Tamil Nadu",era:"DANCE · 11",image:"https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1100&q=85",imageQuery:"Bharatanatyam dancer India",alt:"A Bharatanatyam dancer holding a classical pose",video:"Tamil Nadu Bharatanatyam classical dance",description:"Bharatanatyam is a classical dance associated with Tamil Nadu. Precise footwork, geometric poses, hand gestures, and facial expression bring music and narrative together; the form has evolved through temple, court, and modern stage traditions.",narration:"Bharatanatyam combines rhythm, pose, and expression. Watch the feet mark the beat, then notice how hand gestures and facial expression carry the story. The dance has changed across temple, court, and contemporary stages while keeping its disciplined vocabulary."},
+      { id:"perini",category:"dance",label:"Dance",title:"Perini Sivatandavam",place:"Telangana",state:"Telangana",era:"DANCE · 12",image:"https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1100&q=85",imageQuery:"Perini Sivatandavam Telangana dance",alt:"A Perini Sivatandavam dancer performing a powerful pose",video:"Telangana Perini Sivatandavam dance",description:"Perini Sivatandavam is a vigorous dance tradition associated with the Kakatiya period of present-day Telangana. Strong footwork, leaps, and devotional energy have been revived for contemporary audiences.",narration:"Perini Sivatandavam is a powerful dance tradition associated with the Kakatiya era in Telangana. Its forceful steps and leaps once prepared warriors for battle and honored Shiva. Today, performers continue to revive the form for new audiences."},
+      { id:"raslila",category:"dance",label:"Dance",title:"Raslila",place:"Braj · Uttar Pradesh",state:"Uttar Pradesh",era:"DANCE · 13",image:"https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1100&q=85",imageQuery:"Raasleela Gopeshwar Mahadev",photoPage:"https://commons.wikimedia.org/wiki/File:Raasleela_of_Shri_Gopeshwar_Mahadev.jpg",photoTitle:"Raasleela of Shri Gopeshwar Mahadev.jpg",alt:"Raslila scene depicting Krishna and the gopis",video:"Braj Raslila dance Krishna performance",description:"Raslila is a devotional dance-drama from the Braj region, dramatizing stories of Krishna through music, poetry, and movement. Performances connect local storytelling with the sacred geography of Mathura and Vrindavan.",narration:"Raslila comes from Braj, the region around Mathura and Vrindavan. Through music, poetry, and dance, performers bring stories of Krishna to life. The performance connects devotion with the places where these stories are remembered."},
+      { id:"purulia-chhau",category:"dance",label:"Dance",title:"Purulia Chhau",place:"Purulia · West Bengal",state:"West Bengal",era:"DANCE · 14",image:"https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1100&q=85",imageQuery:"Purulia Chhau dance West Bengal",alt:"A masked Purulia Chhau dancer performing",video:"West Bengal Purulia Chhau masked dance",description:"Purulia Chhau is a masked dance tradition from West Bengal, combining martial movement, acrobatics, music, and stories from epics and local folklore. The painted masks are crafted in the region and help define each character.",narration:"Purulia Chhau combines dance, martial movement, acrobatics, and large painted masks. The performers tell stories from epics and local folklore without spoken dialogue. Look at how a mask, costume, and movement make each character recognizable."}
+    );
+    exhibits.sort((first,second)=>Number(second.category==="museum")-Number(first.category==="museum"));
+    const stateJourney=["Assam","Bihar","Delhi","Gujarat","Karnataka","Kerala","Maharashtra","Odisha","Punjab","Rajasthan","Tamil Nadu","Telangana","Uttar Pradesh","West Bengal"];
+    const cards=document.getElementById("cards"),modal=document.getElementById("exhibitModal"),savedCount=document.getElementById("savedCount"),stateSelect=document.getElementById("stateSelect"),stateStepLabel=document.getElementById("stateStepLabel");
+    const saved=new Set(JSON.parse(localStorage.getItem("common-ground-saved")||"[]"));
+    let activeExhibit=exhibits[0],activeFilter="all",activeState="all",searchTerm="",toastTimer,cameraStream,scanTimer,qrDetector,audioRequestId=0,audioPreparing=false;
+    stateJourney.forEach(state=>stateSelect.add(new Option(state,state)));
+    stateSelect.value="all";
+    function exhibitCard(item){return `<article class="exhibit-card" tabindex="0" role="button" aria-label="Open ${item.title}" data-id="${item.id}"><div class="card-image"><img src="${item.image}" alt="${item.alt}" loading="lazy"><span class="card-number">${item.era}</span></div><div class="card-body"><div><p class="card-category">${item.label}</p><h3>${item.title}</h3><p class="card-place">${item.place}</p></div><button class="card-open" type="button" aria-label="Explore ${item.title}">↗</button></div></article>`;}
+    function removeRepeatedPhotos(){
+      const seen=new Set();
+      cards.querySelectorAll(".card-image img").forEach(image=>{
+        const key=new URL(image.src,location.href).pathname.toLowerCase(),frame=image.closest(".card-image");
+        image.hidden=seen.has(key);frame.classList.toggle("photo-missing",image.hidden);seen.add(key);
+      });
+    }
+    function renderCards(items=exhibits.filter(item=>(activeFilter==="all"||item.category===activeFilter)&&(activeState==="all"||item.state===activeState)&&`${item.title} ${item.place} ${item.label} ${item.state}`.toLowerCase().includes(searchTerm))){
+      const visibleStates=stateJourney.filter(state=>items.some(item=>item.state===state));
+      cards.innerHTML=items.length?visibleStates.map((state,index)=>{const stateItems=items.filter(item=>item.state===state).sort((first,second)=>first.title.localeCompare(second.title));return `<section class="state-group"><div class="state-heading"><span>STOP ${String(stateJourney.indexOf(state)+1).padStart(2,"0")}</span><h3>${state}</h3><span>${stateItems.length} ${stateItems.length===1?"story":"stories"}</span></div><div class="state-group-cards">${stateItems.map(exhibitCard).join("")}</div></section>`;}).join(""):'<p class="empty-state">No stories match. Try another search.</p>';
+      document.getElementById("collectionCount").textContent=activeState==="all"?`${items.length} stories · ${visibleStates.length} states`:`STOP ${String(stateJourney.indexOf(activeState)+1).padStart(2,"0")} / ${stateJourney.length} · ${activeState}`;
+      stateStepLabel.textContent=activeState==="all"?`All India · ${stateJourney.length} states`:`${String(stateJourney.indexOf(activeState)+1).padStart(2,"0")} / ${stateJourney.length} · ${activeState}`;
+      removeRepeatedPhotos();
+      cards.querySelectorAll(".exhibit-card").forEach(card=>{card.addEventListener("click",()=>openExhibit(card.dataset.id));card.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();openExhibit(card.dataset.id);}});});
+    }
+    async function loadCommonsImages(){
+      const usedPhotoPaths=new Set();
+      await Promise.all(exhibits.filter(item=>item.imageQuery).map(async item=>{
+        try{
+          const query=new URLSearchParams({action:"query",generator:"search",gsrsearch:`filetype:bitmap ${item.imageQuery}`,gsrnamespace:"6",gsrlimit:"12",prop:"imageinfo",iiprop:"url|mime",iiurlwidth:"800",format:"json",origin:"*"});
+          const response=await fetch(`https://commons.wikimedia.org/w/api.php?${query}`),data=await response.json();
+          const page=Object.values(data.query?.pages||{}).find(result=>{const info=result.imageinfo?.[0];return ["image/jpeg","image/png","image/webp"].includes(info?.mime)&&info.thumburl&&!usedPhotoPaths.has(new URL(info.thumburl).pathname);}),image=page?.imageinfo?.[0]?.thumburl;
+          if(!image)return;
+          usedPhotoPaths.add(new URL(image).pathname);
+          item.image=image;item.photoPage=`https://commons.wikimedia.org/wiki/${encodeURIComponent(page.title.replace(" ","_"))}`;item.photoTitle=page.title.replace(/^File:/,"").replaceAll("_"," ");
+          const cardImage=cards.querySelector(`[data-id="${item.id}"] .card-image img`);
+          if(cardImage){cardImage.src=image;cardImage.alt=`${item.title}: ${item.photoTitle}`;cardImage.hidden=false;cardImage.closest(".card-image").classList.remove("photo-missing");}
+          if(activeExhibit.id===item.id){document.getElementById("dialogPhoto").src=image;document.getElementById("dialogPhoto").alt=cardImage?.alt||item.title;setPhotoCredit(item);}
+        }catch{}
+      }));
+      removeRepeatedPhotos();
+    }
+    function setPhotoCredit(item){
+      const credit=document.getElementById("photoCredit");
+      credit.hidden=!item.photoPage;
+      if(item.photoPage){credit.href=item.photoPage;credit.textContent=`Image: ${item.photoTitle} · Wikimedia Commons`;}
+    }
+    function updateSaved(){savedCount.textContent=saved.size;localStorage.setItem("common-ground-saved",JSON.stringify([...saved]));}
+    function announce(message){const toast=document.getElementById("toast");toast.textContent=message;toast.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove("show"),2400);}
+    function stopNarration(){audioRequestId++;audioPreparing=false;if("speechSynthesis"in window)window.speechSynthesis.cancel();document.querySelectorAll("#heroListen,#audioButton").forEach(button=>{button.classList.remove("active");const label=button.querySelector("span:last-child");if(label)label.textContent=button.id==="heroListen"?"Listen to the story":"Play audio story";});}
+    function splitNarration(text){
+      const sentences=text.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[text];
+      return sentences.flatMap(sentence=>{const chunks=[];let current="";sentence.trim().split(/\s+/).forEach(word=>{const next=current?`${current} ${word}`:word;if(next.length>150&&current){chunks.push(current);current=word;}else current=next;});if(current)chunks.push(current);return chunks;});
+    }
+    async function translateNarration(item,language){
+      const cacheKey=`common-ground-translation-${language}-${item.id}`,cached=localStorage.getItem(cacheKey);
+      if(cached)return cached;
+      const translated=await Promise.all(splitNarration(item.narration).map(async chunk=>{
+        const params=new URLSearchParams({q:chunk,langpair:`en|${language}`}),response=await fetch(`https://api.mymemory.translated.net/get?${params}`),data=await response.json();
+        if(!response.ok||data.responseStatus!==200||!data.responseData?.translatedText)throw new Error("Translation unavailable");
+        const decoded=document.createElement("textarea");decoded.innerHTML=data.responseData.translatedText;return decoded.value;
+      }));
+      const result=translated.join(" ");
+      try{localStorage.setItem(cacheKey,result);}catch{}
+      return result;
+    }
+    async function speak(item,source){
+      if(!( "speechSynthesis"in window)){announce("Audio narration is not available in this browser.");return;}
+      if(window.speechSynthesis.speaking||audioPreparing){stopNarration();return;}
+      const requestId=++audioRequestId,language=document.getElementById("audioLanguage").value,label=source.querySelector("span:last-child"),output=document.getElementById("translationOutput");
+      audioPreparing=true;if(label)label.textContent=language==="en"?"Preparing audio...":"Translating...";
+      try{
+        const text=language==="en"?item.narration:await translateNarration(item,language);
+        if(requestId!==audioRequestId)return;
+        audioPreparing=false;output.textContent=text;output.lang={en:"en-IN",hi:"hi-IN",kn:"kn-IN"}[language];output.hidden=false;
+        const utterance=new SpeechSynthesisUtterance(text);utterance.lang=output.lang;utterance.rate=.92;
+        const voice=window.speechSynthesis.getVoices().find(candidate=>candidate.lang.toLowerCase().startsWith(language));
+        if(language!=="en"&&!voice){if(label)label.textContent="Play audio story";announce(`${language==="hi"?"Hindi":"Kannada"} text is translated below, but this device has no matching speech voice installed.`);return;}
+        if(voice)utterance.voice=voice;
+        utterance.onend=stopNarration;utterance.onerror=()=>{stopNarration();announce("Audio playback failed. Check this device's speech voices.");};
+        window.speechSynthesis.speak(utterance);source.classList.add("active");if(label)label.textContent="Stop audio story";
+      }catch{
+        if(requestId!==audioRequestId)return;
+        audioPreparing=false;if(label)label.textContent="Play audio story";announce("Translation unavailable. Check your connection or choose English.");
+      }
+    }
+    function exhibitUrl(item){const url=new URL(location.href);url.searchParams.set("exhibit",item.id);return url.href;}
+    function openExhibit(id){
+      activeExhibit=exhibits.find(item=>item.id===id)||exhibits[0];
+      document.getElementById("dialogPhoto").src=activeExhibit.image;document.getElementById("dialogPhoto").alt=activeExhibit.alt;
+      setPhotoCredit(activeExhibit);
+      document.getElementById("dialogCategory").textContent=`${activeExhibit.label} · ${activeExhibit.era}`;document.getElementById("dialogTitle").textContent=activeExhibit.title;document.getElementById("dialogPlace").textContent=activeExhibit.place;document.getElementById("dialogDescription").textContent=activeExhibit.description;
+      document.getElementById("videoButton").href=`https://www.youtube.com/results?search_query=${encodeURIComponent(activeExhibit.video)}`;
+      const saveButton=document.getElementById("saveButton"),isSaved=saved.has(activeExhibit.id);saveButton.classList.toggle("active",isSaved);saveButton.querySelector("span").textContent=isSaved?"Saved":"Save this story";
+      const qrUrl=exhibitUrl(activeExhibit),qrApi=`https://api.qrserver.com/v1/create-qr-code/?size=220x220&format=png&data=${encodeURIComponent(qrUrl)}`,isPublicPage=location.protocol==="https:";
+      const qrArea=document.getElementById("qrArea"),qrImage=document.getElementById("qrImage"),qrDownload=document.getElementById("qrDownload");
+      qrArea.classList.toggle("needs-host",!isPublicPage);qrImage.hidden=!isPublicPage;qrDownload.hidden=!isPublicPage;
+      document.getElementById("qrMessage").textContent=isPublicPage?"Scan this code at the museum or heritage site to open its images and audio story.":"Publish this page on a public HTTPS address first. Then open the exhibit online to generate a QR code that visitors' phones can reach.";
+      if(isPublicPage){qrImage.src=qrApi;qrDownload.href=`https://api.qrserver.com/v1/create-qr-code/?size=600x600&format=png&download=1&data=${encodeURIComponent(qrUrl)}`;}
+      document.getElementById("qrArea").classList.remove("visible");
+      document.getElementById("hotspotNote").hidden=true;document.getElementById("dialogPhoto").style.transform="translateX(0) scale(1.04)";document.getElementById("dialogPhoto").dataset.offset="0";
+      modal.classList.add("open");document.body.style.overflow="hidden";document.getElementById("closeModal").focus();
+    }
+    function closeExhibit(){modal.classList.remove("open");document.body.style.overflow="";stopNarration();}
+    document.querySelectorAll(".filter").forEach(button=>button.addEventListener("click",()=>{activeFilter=button.dataset.filter;document.querySelectorAll(".filter").forEach(filter=>filter.setAttribute("aria-pressed",String(filter===button)));renderCards();}));
+    document.getElementById("searchInput").addEventListener("input",event=>{searchTerm=event.target.value.trim().toLowerCase();renderCards();});
+    stateSelect.addEventListener("change",event=>{activeState=event.target.value;renderCards();});
+    function moveState(direction){const current=stateJourney.indexOf(activeState),next=current<0?(direction>0?0:stateJourney.length-1):current+direction;activeState=next<0||next>=stateJourney.length?"all":stateJourney[next];stateSelect.value=activeState;renderCards();}
+    document.getElementById("previousState").addEventListener("click",()=>moveState(-1));document.getElementById("nextState").addEventListener("click",()=>moveState(1));
+    document.getElementById("heroExplore").addEventListener("click",()=>document.getElementById("collection").scrollIntoView({behavior:"smooth"}));document.getElementById("experienceExplore").addEventListener("click",()=>document.getElementById("collection").scrollIntoView({behavior:"smooth"}));
+    document.getElementById("heroListen").addEventListener("click",()=>{openExhibit("taj");document.getElementById("audioLanguage").focus();});document.getElementById("audioButton").addEventListener("click",event=>speak(activeExhibit,event.currentTarget));
+    document.getElementById("audioLanguage").addEventListener("change",()=>{stopNarration();document.getElementById("translationOutput").hidden=true;});
+    document.getElementById("closeModal").addEventListener("click",closeExhibit);modal.addEventListener("click",event=>{if(event.target===modal)closeExhibit();});document.addEventListener("keydown",event=>{if(event.key==="Escape"){closeExhibit();closeScanner();}});
+    document.querySelectorAll(".hotspot").forEach(button=>button.addEventListener("click",()=>{const note=document.getElementById("hotspotNote");note.textContent=button.dataset.note;note.hidden=false;}));
+    document.getElementById("saveButton").addEventListener("click",()=>{if(saved.has(activeExhibit.id))saved.delete(activeExhibit.id);else saved.add(activeExhibit.id);updateSaved();const isSaved=saved.has(activeExhibit.id);document.getElementById("saveButton").classList.toggle("active",isSaved);document.getElementById("saveButton").querySelector("span").textContent=isSaved?"Saved":"Save this story";announce(isSaved?"Story saved for later.":"Story removed from saved stories.");});
+    document.getElementById("qrButton").addEventListener("click",()=>document.getElementById("qrArea").classList.toggle("visible"));
+    document.getElementById("savedLink").addEventListener("click",()=>{activeFilter="all";activeState="all";stateSelect.value="all";searchTerm="";document.getElementById("searchInput").value="";document.querySelectorAll(".filter").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.filter==="all")));renderCards(exhibits.filter(item=>saved.has(item.id)));document.getElementById("collection").scrollIntoView({behavior:"smooth"});});
+    const dialogImage=document.getElementById("dialogImage");let dragStart=null;
+    dialogImage.addEventListener("pointerdown",event=>{if(event.target.closest("button"))return;dragStart={x:event.clientX,offset:Number(document.getElementById("dialogPhoto").dataset.offset||0)};dialogImage.setPointerCapture(event.pointerId);});
+    dialogImage.addEventListener("pointermove",event=>{if(!dragStart)return;const offset=Math.max(-65,Math.min(65,dragStart.offset+(event.clientX-dragStart.x)*.12)),photo=document.getElementById("dialogPhoto");photo.dataset.offset=offset;photo.style.transform=`translateX(${offset}px) scale(1.18)`;});dialogImage.addEventListener("pointerup",()=>{dragStart=null;});
+    const scanModal=document.getElementById("scanModal"),scanVideo=document.getElementById("scanVideo"),scanStatus=document.getElementById("scanStatus");
+    function closeScanner(){scanModal.classList.remove("open");if(cameraStream)cameraStream.getTracks().forEach(track=>track.stop());cameraStream=null;clearTimeout(scanTimer);scanVideo.srcObject=null;}
+    async function scanFrame(){if(!cameraStream||!qrDetector)return;try{const codes=await qrDetector.detect(scanVideo);if(codes.length){const value=codes[0].rawValue;let id;try{id=new URL(value).searchParams.get("exhibit");}catch{id=value;}if(exhibits.some(item=>item.id===id)){closeScanner();openExhibit(id);return;}scanStatus.textContent="This QR code is not part of this museum yet.";}}catch{}scanTimer=setTimeout(scanFrame,250);}
+    document.getElementById("scanOpen").addEventListener("click",()=>{scanModal.classList.add("open");scanStatus.textContent="Start your camera, or choose an exhibit below.";document.getElementById("scanFallback").innerHTML=exhibits.map(item=>`<button class="filter" type="button" data-id="${item.id}">${item.title}</button>`).join("");document.querySelectorAll("#scanFallback button").forEach(button=>button.addEventListener("click",()=>{closeScanner();openExhibit(button.dataset.id);}));});
+    document.getElementById("scanClose").addEventListener("click",closeScanner);scanModal.addEventListener("click",event=>{if(event.target===scanModal)closeScanner();});
+    document.getElementById("cameraStart").addEventListener("click",async()=>{
+      if(!navigator.mediaDevices?.getUserMedia){scanStatus.textContent="Camera access needs HTTPS or localhost. Open an exhibit below instead.";return;}
+      if(!("BarcodeDetector"in window)){scanStatus.textContent="QR scanning is not supported in this browser. Open an exhibit below, or try current Chrome/Edge.";return;}
+      try{qrDetector=new BarcodeDetector({formats:["qr_code"]});cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"}},audio:false});scanVideo.srcObject=cameraStream;await scanVideo.play();scanStatus.textContent="Camera ready. Point it at an exhibit QR code.";scanFrame();}
+      catch{scanStatus.textContent="Could not start the camera. Check camera permission, or open an exhibit below.";closeScanner();}
+    });
+    document.getElementById("cameraStop").addEventListener("click",()=>{closeScanner();scanModal.classList.add("open");scanStatus.textContent="Camera stopped. Choose an exhibit or start again.";});
+    updateSaved();renderCards();loadCommonsImages();
+    const linkedExhibit=new URLSearchParams(location.search).get("exhibit");if(linkedExhibit&&exhibits.some(item=>item.id===linkedExhibit))openExhibit(linkedExhibit);
+  </script>
+</body>
+</html>
